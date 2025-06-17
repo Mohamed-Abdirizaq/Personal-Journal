@@ -1,6 +1,7 @@
 from datetime import datetime
 import json
 import os
+import openai
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
@@ -37,13 +38,36 @@ class Journal:
         }
         return messages.get(mood_rating, "")
 
+    # Analyze feelings text using OpenAI and return sentiment summary
+    def analyze_sentiment(self, feelings_text):
+        api_key = os.getenv("OPENAI_API_KEY")
+        if not api_key:
+            return "Sentiment analysis unavailable (missing API key)."
+        openai.api_key = api_key
+        try:
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant that summarizes the overall sentiment expressed in a journal entry as Positive, Neutral, or Negative, with a brief reason."},
+                    {"role": "user", "content": f"Feelings: {feelings_text}"}
+                ],
+                max_tokens=30,
+                temperature=0.2,
+            )
+            sentiment = response['choices'][0]['message']['content'].strip()
+            return sentiment
+        except Exception as e:
+            return f"Sentiment analysis error: {e}"
+
     # Add a new journal entry via user input
     def add_entry(self):
+        feelings_text = input("How did you feel today? ")        # Prompt for feelings
         entry = {
             "date": datetime.now().strftime("%Y-%m-%d"),         # Automatically set today's date
             "title": input("Entry Title: "),                     # Prompt for title
             "events": input("Main Events: "),                    # Prompt for main events
-            "feelings": input("How did you feel today? "),       # Prompt for feelings
+            "feelings": feelings_text,
+            "sentiment": self.analyze_sentiment(feelings_text),  # AI-powered sentiment analysis
             "notes": input("Additional Notes: "),                # Prompt for notes
             "forget": input("Things I Wish to Forget: ")         # Prompt for things to forget
         }
@@ -74,6 +98,7 @@ class Journal:
         table.add_column("Title", style="yellow")
         table.add_column("Events", style="white")
         table.add_column("Feelings", style="white")
+        table.add_column("Sentiment", style="blue")
         table.add_column("Mood", style="bold green")
         table.add_column("Forget", style="red")
         table.add_column("Notes", style="white")
@@ -85,6 +110,7 @@ class Journal:
                 entry.get("title", ""),
                 entry.get("events", ""),
                 entry.get("feelings", ""),
+                entry.get("sentiment", ""),
                 str(entry.get("mood", "")),
                 entry.get("forget", ""),
                 entry.get("notes", "")
@@ -115,6 +141,7 @@ class Journal:
         table.add_column("Title", style="yellow")
         table.add_column("Events", style="white")
         table.add_column("Feelings", style="white")
+        table.add_column("Sentiment", style="blue")
         table.add_column("Mood", style="bold green")
         table.add_column("Forget", style="red")
         table.add_column("Notes", style="white")
@@ -125,6 +152,7 @@ class Journal:
                 entry.get("title", ""),
                 entry.get("events", ""),
                 entry.get("feelings", ""),
+                entry.get("sentiment", ""),
                 str(entry.get("mood", "")),
                 entry.get("forget", ""),
                 entry.get("notes", "")
