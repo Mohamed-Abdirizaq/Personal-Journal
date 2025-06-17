@@ -1,24 +1,32 @@
-# Personal-Journal
-📝 Personal Journal
+
+Markdown
+# 📝 Personal Journal
+
 A simple, beautiful, and interactive command-line (CLI) personal journal app built with Python.
 
-🚀 Features
-Add daily journal entries
-Record your mood, events, feelings, notes, and more.
+---
 
-AI-powered sentiment analysis
-Automatically analyzes your feelings using OpenAI and adds a sentiment summary to each entry.
+## 🚀 Features
 
-Rich CLI interface
-Colorful tables and styled output powered by rich.
+- **Add daily journal entries**  
+  Record your mood, events, feelings, notes, and more.
 
-View and search entries
-Browse all entries or search by mood.
+- **AI-powered sentiment analysis**  
+  Automatically analyzes your feelings using OpenAI and adds a sentiment summary to each entry.
 
-🛠️ Installation
-1. Install Required Packages
+- **Rich CLI interface**  
+  Colorful tables and styled output powered by [`rich`](https://github.com/Textualize/rich).
 
-bash
+- **View and search entries**  
+  Browse all entries or search by mood.
+
+---
+
+## 🛠️ Installation
+
+**1. Install Required Packages**
+
+```bash
 pip install openai rich
 If you have multiple Python versions installed:
 
@@ -46,3 +54,4 @@ or, if using Python 3:
 bash
 python3 Personal_Journal_Console_Application.py
 Follow the menu prompts to add entries, view your journal, or search by mood.
+
